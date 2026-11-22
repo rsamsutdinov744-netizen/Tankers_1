@@ -210,10 +210,42 @@ def _conn():
     return conn
 
 
+def _schema_columns():
+    result = {}
+    for chunk in SCHEMA.split("CREATE TABLE IF NOT EXISTS")[1:]:
+        head, _, body = chunk.partition("(")
+        table = head.strip()
+        if not table.isidentifier():
+            continue
+        body = body.split(");")[0]
+        cols = []
+        for line in body.splitlines():
+            line = line.strip().rstrip(",")
+            if not line or line.upper().startswith(("PRIMARY KEY", "UNIQUE", "FOREIGN", "CHECK")):
+                continue
+            name, _, decl = line.partition(" ")
+            if name and decl and "PRIMARY KEY" not in decl.upper():
+                cols.append((name, decl))
+        result[table] = cols
+    return result
+
+
+def _migrate(conn):
+    for table, cols in _schema_columns().items():
+        existing = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+        if not existing:
+            continue
+        for name, decl in cols:
+            if name not in existing:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {decl}")
+    conn.commit()
+
+
 def init_db():
     conn = _conn()
     conn.executescript(SCHEMA)
     conn.commit()
+    _migrate(conn)
     conn.close()
 
 
