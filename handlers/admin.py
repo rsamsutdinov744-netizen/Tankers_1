@@ -7,6 +7,7 @@ from aiogram.types import Message, CallbackQuery
 import config
 import database as db
 import services
+import keyboards
 from handlers.tasks import delete_task
 from states import *
 from utils import kb, send_content, file_list_from_message, fmt_name, user_line, \

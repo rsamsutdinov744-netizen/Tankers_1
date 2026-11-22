@@ -6,6 +6,7 @@ from aiogram.types import Message, CallbackQuery
 import config
 import database as db
 import services
+import keyboards
 from states import MaterialCreate, Announcement
 from utils import kb, send_content, fmt_name
 

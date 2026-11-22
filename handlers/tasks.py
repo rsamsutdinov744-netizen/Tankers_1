@@ -5,6 +5,7 @@ from aiogram.types import Message, CallbackQuery
 import config
 import database as db
 import services
+import keyboards
 from states import TaskCreate, WorkSubmit, Grade, TemplateCreate, FormCreate
 from utils import kb, send_content, file_list_from_message, extract_files, \
     SUPPORT_PHRASES, support_phrase, fmt_name

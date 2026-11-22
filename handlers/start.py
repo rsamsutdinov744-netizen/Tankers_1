@@ -8,6 +8,7 @@ from aiogram.types import Message, CallbackQuery
 import config
 import database as db
 import services
+import keyboards
 from states import *
 from utils import kb, user_line, fmt_name
 

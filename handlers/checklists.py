@@ -6,6 +6,7 @@ from aiogram.types import Message, CallbackQuery, ReplyKeyboardMarkup, KeyboardB
 import config
 import database as db
 import services
+import keyboards
 from states import ChecklistCreate, ChecklistProof
 from utils import kb, file_list_from_message, send_content, fmt_name
 
