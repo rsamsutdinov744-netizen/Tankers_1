@@ -132,10 +132,16 @@ async def send_content(bot, chat_id, text, photo=None, files=None, kb=None,
 
 
 def kb(rows):
-    return InlineKeyboardMarkup(
-        inline_keyboard=[[InlineKeyboardButton(text=t, callback_data=d) for t, d in row]
-                         for row in rows]
-    )
+    inline = []
+    for row in rows:
+        if row and all(isinstance(it, (list, tuple)) and len(it) == 2 for it in row):
+            pairs = list(row)
+        elif len(row) == 2 and all(isinstance(it, str) for it in row):
+            pairs = [list(row)]
+        else:
+            pairs = [list(row[i:i + 2]) for i in range(0, len(row), 2)]
+        inline.append([InlineKeyboardButton(text=t, callback_data=d) for t, d in pairs])
+    return InlineKeyboardMarkup(inline_keyboard=inline)
 
 
 def back_kb(to="menu"):
