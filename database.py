@@ -257,7 +257,7 @@ def _schema_columns():
 
 def _migrate(conn):
     for table, cols in _schema_columns().items():
-        existing = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+        existing = {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
         if not existing:
             continue
         for name, decl in cols:
