@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sqlite3
 from datetime import datetime
 
@@ -203,9 +204,33 @@ CREATE TABLE IF NOT EXISTS forms (
 """
 
 
+INT_COLUMNS = {
+    "id", "role", "admin_level", "banned", "note_msg", "closed_by", "created_by",
+    "reviewer_id", "checked_by", "assigned_by", "checklist_id", "assigned_to",
+    "taker_id", "target_id", "vote_id", "voter_id", "chat_id", "thread", "thread_id",
+    "parent_id", "form_id", "template_id", "row_id", "user_id", "task_id",
+    "fired", "active", "pinned", "is_permanent", "weight", "best", "grade",
+}
+FLOAT_COLUMNS = {"points", "bonus"}
+
+
+def _row_factory(cursor, row):
+    out = {}
+    for col, value in zip(cursor.description, row):
+        key = col[0]
+        if isinstance(value, str):
+            s = value.strip()
+            if key in INT_COLUMNS and re.fullmatch(r"-?\d+", s):
+                value = int(s)
+            elif key in FLOAT_COLUMNS and re.fullmatch(r"-?\d+(\.\d+)?", s):
+                value = float(s)
+        out[key] = value
+    return out
+
+
 def _conn():
     conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = _row_factory
     conn.execute("PRAGMA journal_mode=WAL")
     return conn
 
