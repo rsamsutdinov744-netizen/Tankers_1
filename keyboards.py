@@ -11,14 +11,18 @@ def rkb(rows, resize=True):
 
 
 def main_menu(u):
+    try:
+        role = int(u["role"])
+    except (TypeError, ValueError, KeyError):
+        role = 0
     rows = [
         ["📋 Задания", "📚 Материалы", "📢 Объявления"],
         ["📤 Мои работы", "👤 Профиль", "💼 Должность"],
         ["🏠 Меню"],
     ]
-    if u["role"] >= 1:
+    if role >= 1:
         rows.append(["🛠 Админ-панель"])
-    if u["role"] >= 4:
+    if role >= 4:
         rows.append(["⚙️ Владелец"])
     return rkb(rows)
 
