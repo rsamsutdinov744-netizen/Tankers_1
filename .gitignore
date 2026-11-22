@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+tank_bot.db
+*.db
+.env

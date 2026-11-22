@@ -1,4 +1,8 @@
-BOT_TOKEN = "ВСТАВЬТЕ_СВОЙ_ТОКЕН"
+import os
+
+BOT_TOKEN = (os.getenv("TELEGRAM_BOT_TOKEN") or os.getenv("BOT_TOKEN")
+             or os.getenv("TELEGRAM_TOKEN") or os.getenv("TOKEN")
+             or "ВСТАВЬТЕ_СВОЙ_ТОКЕН")
 
 DEFAULT_PASSWORDS = {
     "pw_user":  "UT653IO212",
